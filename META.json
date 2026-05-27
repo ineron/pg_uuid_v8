@@ -1,0 +1,67 @@
+{
+   "name": "pg_uuid_v8",
+   "abstract": "UUID v8: Steganographic UUIDs with hidden timestamps for PostgreSQL",
+   "description": "pg_uuid_v8 provides UUID v8 functionality - UUIDs that appear as standard v4 UUIDs but contain hidden timestamps for efficient indexing. Solves the classic UUID v4 (private, slow) vs UUID v7 (fast, public) dilemma by providing both privacy and performance. Features configurable encryption modes (XOR, AES128, AES256) and functional indexing for 50% space savings.",
+   "version": "1.0.0",
+   "release_status": "stable",
+   "author": "Eugene <ineron.spb@gmail.com>",
+   "license": "postgresql",
+   "provides": {
+      "pg_uuid_v8": {
+         "version": "1.0.0",
+         "abstract": "UUID v8 extension with steganographic capabilities",
+         "file": "pg_uuid_v8--1.0.sql"
+      }
+   },
+   "tags": [
+      "uuid",
+      "uuid8",
+      "steganographic",
+      "indexing",
+      "performance",
+      "privacy",
+      "cryptography",
+      "timestamps"
+   ],
+   "prereqs": {
+      "runtime": {
+         "requires": {
+            "PostgreSQL": "12.0.0"
+         },
+         "recommends": {
+            "PostgreSQL": "14.0.0"
+         }
+      },
+      "build": {
+         "requires": {
+            "PostgreSQL": "12.0.0"
+         }
+      }
+   },
+   "resources": {
+      "homepage": "https://github.com/ineron/pg_uuid_v8",
+      "bugtracker": {
+         "web": "https://github.com/ineron/pg_uuid_v8/issues"
+      },
+      "repository": {
+         "url": "git://github.com/ineron/pg_uuid_v8.git",
+         "web": "https://github.com/ineron/pg_uuid_v8",
+         "type": "git"
+      }
+   },
+   "generated_by": "Eugene",
+   "meta-spec": {
+      "version": "1.0.0",
+      "url": "https://pgxn.org/spec/"
+   },
+   "keywords": [
+      "uuid",
+      "uuid v8",
+      "steganographic",
+      "hidden timestamps",
+      "functional indexing",
+      "performance optimization",
+      "database indexing",
+      "cryptography"
+   ]
+}

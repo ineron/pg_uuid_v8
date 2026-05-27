@@ -44,6 +44,9 @@ articles/
 !README.md
 !LICENSE.md
 
+# Include PGXN metadata
+!META.json
+
 # =============================================================================
 # Memory Bank (development artifacts)
 # =============================================================================
