@@ -1,30 +1,32 @@
 # pg_uuid_v8
 
-**PostgreSQL UUID v8 Extension** - Steganographic UUIDs with hidden timestamps.
+A PostgreSQL extension for steganographic UUIDs with embedded timestamps.
 
 ## Overview
 
-`pg_uuid_v8` is a PostgreSQL extension that implements **UUID v8** - a novel UUID standard that solves the classic dilemma between UUID v4 (random, slow indexing) and UUID v7 (timestamp-based, fast indexing but reveals creation time). This PostgreSQL-specific implementation provides steganographic functionality where UUIDs appear as standard v4 UUIDs but contain hidden timestamps for efficient indexing and sorting.
+`pg_uuid_v8` addresses the performance vs privacy trade-off in UUID usage by implementing steganographic UUIDs. These UUIDs maintain full compatibility with the UUID v4 format while embedding hidden timestamps that enable efficient indexing and range queries.
 
-### Key Features
+## Features
 
-- **Steganographic UUIDs**: Look like random UUID v4 but contain hidden timestamps
-- **Efficient Indexing**: Sort and index by hidden timestamp without revealing creation time
-- **Unpredictable**: External users cannot determine creation time from UUID appearance
-- **Seed-based Obfuscation**: Uses configurable seeds for timestamp encryption
-- **Full PostgreSQL Integration**: Custom operators and comparison functions
+- **UUID v4 Compatibility**: Generated UUIDs pass standard v4 validation (correct version and variant bits)
+- **Hidden Timestamps**: Microsecond-precision timestamps embedded using steganographic techniques
+- **Configurable Encryption**: XOR, AES-128, and AES-256 modes for timestamp obfuscation
+- **Functional Indexing**: Support for PostgreSQL functional indexes on extracted timestamps  
+- **Range Queries**: Efficient time-based queries using hidden timestamp data
+- **Seed Management**: Configurable encryption seeds via PostgreSQL GUC variables
 
-## The Problem Solved
+## Technical Approach
 
-UUID evolution forced developers to choose between performance and privacy:
-- **UUID v4**: Truly random and private, but poor indexing performance
-- **UUID v7**: Great indexing performance, but reveals creation timestamp
-- **UUID v8**: Best of both worlds - efficient indexing with timestamp privacy
+Standard UUID implementations present a trade-off between indexing performance and timestamp privacy:
 
-UUID v8 bridges this gap by providing UUIDs that are:
-- **Externally identical** to UUID v4 (maintains unpredictability)
-- **Internally optimized** like UUID v7 (enables efficient indexing)
-- **Cryptographically protected** (configurable XOR/AES encryption modes)
+- **UUID v4**: Random values provide good privacy but result in poor B-tree index performance due to random insertion patterns
+- **UUID v7**: Timestamp-based prefixes enable efficient indexing but expose creation time information
+
+This extension implements steganographic UUIDs that:
+- Maintain UUID v4 format compliance (version=4, proper variant bits)
+- Embed encrypted timestamps in the random portion of the UUID
+- Support functional indexing on extracted timestamps for efficient range queries
+- Provide configurable encryption to prevent timestamp discovery
 
 ## Building and Installation
 
@@ -163,13 +165,13 @@ LIMIT 100;
 
 ## Encryption Modes
 
-pg_uuid_v8 supports multiple encryption algorithms for timestamp obfuscation, offering different security/performance trade-offs:
+The extension provides multiple algorithms for timestamp obfuscation:
 
-### Available Modes
+### Available Algorithms
 
-- **XOR** (default): Fast XOR-based encryption with SHA-256 key derivation
-- **AES128**: AES-128 encryption for cryptographically secure obfuscation 
-- **AES256**: AES-256 encryption for maximum security
+- **XOR** (default): XOR-based obfuscation with SHA-256 key derivation from seed
+- **AES128**: AES-128 encryption in ECB mode for cryptographically secure timestamp protection
+- **AES256**: AES-256 encryption in ECB mode for enhanced security requirements
 
 ### Configuration
 
