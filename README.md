@@ -44,7 +44,7 @@ sudo make install
 # This is not critical - the extension will work correctly without LLVM JIT
 
 # Verify installation succeeded by checking key files
-ls /usr/pgsql-*/lib/pg_iuuid.so /usr/pgsql-*/share/extension/pg_iuuid*
+ls /usr/pgsql-*/lib/pg_uuid_v8.so /usr/pgsql-*/share/extension/pg_uuid_v8*
 
 # Run regression tests
 make installcheck
@@ -53,15 +53,15 @@ make installcheck
 ### Troubleshooting Installation
 
 **LLVM bitcode errors**: During `make install` you may see errors about missing `llvm-lto`. This is **not critical** - the extension works without LLVM JIT compilation. The important files that must be installed are:
-- `pg_iuuid.so` (shared library)
-- `pg_iuuid.control` (extension metadata)  
-- `pg_iuuid--1.0.sql` (SQL definitions)
+- `pg_uuid_v8.so` (shared library)
+- `pg_uuid_v8.control` (extension metadata)  
+- `pg_uuid_v8--1.0.sql` (SQL definitions)
 
 **Alternative installation** (if make install fails completely):
 ```bash
 # Install files manually
-sudo cp uuid_v8.so $(pg_config --pkglibdir)/
-sudo cp uuid_v8.control uuid_v8--1.0.sql $(pg_config --sharedir)/extension/
+sudo cp pg_uuid_v8.so $(pg_config --pkglibdir)/
+sudo cp pg_uuid_v8.control pg_uuid_v8--1.0.sql $(pg_config --sharedir)/extension/
 ```
 
 ## Usage
@@ -163,7 +163,7 @@ LIMIT 100;
 
 ## Encryption Modes
 
-pg_iuuid supports multiple encryption algorithms for timestamp obfuscation, offering different security/performance trade-offs:
+pg_uuid_v8 supports multiple encryption algorithms for timestamp obfuscation, offering different security/performance trade-offs:
 
 ### Available Modes
 
@@ -211,7 +211,7 @@ Encryption mode settings are per-session by default. To set system-wide defaults
 
 ```sql
 -- Set default mode in postgresql.conf or via ALTER SYSTEM
-ALTER SYSTEM SET pg_iuuid.encryption_mode = 'AES128';
+ALTER SYSTEM SET uuid_v8.encryption_mode = 'AES128';
 SELECT pg_reload_conf();
 ```
 
