@@ -1,0 +1,6 @@
+# PostgreSQL UUID v8 extension
+comment = 'pg_uuid_v8: UUID v8 extension providing steganographic UUIDs with hidden timestamps'
+default_version = '1.0'
+module_pathname = '$libdir/pg_uuid_v8'
+relocatable = true
+requires = ''

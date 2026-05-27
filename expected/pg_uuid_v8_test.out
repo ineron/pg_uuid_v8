@@ -1,0 +1,126 @@
+-- pg_iuuid regression test
+-- Load extension
+CREATE EXTENSION pg_iuuid;
+-- Basic extension loading test
+SELECT extname FROM pg_extension WHERE extname = 'pg_iuuid';
+ extname  
+----------
+ pg_iuuid
+(1 row)
+
+-- Test steganographic UUID generation
+SELECT uuid_stego_generate() IS NOT NULL;
+ ?column? 
+----------
+ t
+(1 row)
+
+-- Test that generated UUIDs look like version 4
+WITH test_uuid AS (
+  SELECT uuid_stego_generate() as u
+)
+SELECT
+  -- Check version character (should be 4)
+  substring(u::text from 15 for 1) = '4' as is_version_4,
+  -- Check variant character (should be 8, 9, A, or B)
+  substring(u::text from 20 for 1) IN ('8', '9', 'a', 'b') as is_correct_variant
+FROM test_uuid;
+ is_version_4 | is_correct_variant 
+--------------+--------------------
+ t            | t
+(1 row)
+
+-- Test seed functionality
+SELECT uuid_stego_set_seed('test_seed_123');
+ uuid_stego_set_seed 
+---------------------
+ 
+(1 row)
+
+SELECT uuid_stego_get_seed();
+ uuid_stego_get_seed 
+---------------------
+ test_seed_123
+(1 row)
+
+-- Test timestamp extraction
+WITH test_data AS (
+  SELECT uuid_stego_generate() as uuid1, uuid_stego_generate() as uuid2
+)
+SELECT
+  uuid_stego_extract_timestamp(uuid1) > 0 as has_timestamp1,
+  uuid_stego_extract_timestamp(uuid2) > 0 as has_timestamp2,
+  uuid_stego_extract_timestamp(uuid2) >= uuid_stego_extract_timestamp(uuid1) as timestamp_order
+FROM test_data;
+ has_timestamp1 | has_timestamp2 | timestamp_order 
+----------------+----------------+-----------------
+ t              | t              | t
+(1 row)
+
+-- Test comparison functions
+WITH test_uuids AS (
+  SELECT uuid_stego_generate() as u1, uuid_stego_generate() as u2
+)
+SELECT
+  uuid_stego_compare(u1, u1) = 0 as self_equal,
+  uuid_stego_compare(u1, u2) != 0 OR uuid_stego_compare(u2, u1) != 0 as different_comparison
+FROM test_uuids;
+ self_equal | different_comparison 
+------------+----------------------
+ t          | t
+(1 row)
+
+-- Test operators
+WITH test_uuids AS (
+  SELECT uuid_stego_generate() as u1, uuid_stego_generate() as u2
+)
+SELECT
+  CASE WHEN u1 = u2 THEN true
+       WHEN uuid_stego_lt(u1, u2) THEN uuid_stego_gt(u2, u1)
+       WHEN uuid_stego_gt(u1, u2) THEN uuid_stego_lt(u2, u1)
+       ELSE false
+  END as operators_consistent
+FROM test_uuids;
+ operators_consistent 
+----------------------
+ t
+(1 row)
+
+-- Test with different seeds
+SELECT uuid_stego_set_seed('seed1');
+ uuid_stego_set_seed 
+---------------------
+ 
+(1 row)
+
+SELECT uuid_stego_get_seed() = 'seed1' as seed_set_correctly;
+ seed_set_correctly 
+--------------------
+ t
+(1 row)
+
+SELECT uuid_stego_set_seed('seed2');
+ uuid_stego_set_seed 
+---------------------
+ 
+(1 row)
+
+SELECT uuid_stego_get_seed() = 'seed2' as seed_changed_correctly;
+ seed_changed_correctly 
+------------------------
+ t
+(1 row)
+
+-- Reset to default seed
+SELECT uuid_stego_set_seed('pg_iuuid_default_seed_2024');
+ uuid_stego_set_seed 
+---------------------
+ 
+(1 row)
+
+SELECT uuid_stego_get_seed() = 'pg_iuuid_default_seed_2024' as seed_reset;
+ seed_reset 
+------------
+ t
+(1 row)
+
