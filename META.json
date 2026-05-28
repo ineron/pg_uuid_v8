@@ -4,7 +4,7 @@
    "description": "pg_uuid_v8 implements steganographic UUIDs that maintain UUID v4 compatibility while embedding hidden timestamps for improved indexing performance. The extension addresses the trade-off between UUID v4 (random but inefficient for indexing) and UUID v7 (efficient but exposes creation time). Features include configurable encryption modes (XOR, AES128, AES256), functional indexing support, and microsecond timestamp precision.",
    "version": "1.0.0",
    "release_status": "stable",
-   "author": "Eugene <ineron.spb@gmail.com>",
+   "maintainer": "Eugene <ineron.spb@gmail.com>",
    "license": "postgresql",
    "provides": {
       "pg_uuid_v8": {
@@ -53,15 +53,5 @@
    "meta-spec": {
       "version": "1.0.0",
       "url": "https://pgxn.org/spec/"
-   },
-   "keywords": [
-      "uuid",
-      "uuid v8",
-      "steganographic",
-      "hidden timestamps",
-      "functional indexing",
-      "performance optimization",
-      "database indexing",
-      "cryptography"
-   ]
+   }
 }

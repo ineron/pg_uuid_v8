@@ -2,6 +2,9 @@
 
 A PostgreSQL extension for steganographic UUIDs with embedded timestamps.
 
+[![PGXN version](https://badge.fury.io/pg/pg_uuid_v8.svg)](https://pgxn.org/dist/pg_uuid_v8/)
+[![PostgreSQL 12+](https://img.shields.io/badge/PostgreSQL-12%2B-blue.svg)](https://www.postgresql.org/)
+
 ## Overview
 
 `pg_uuid_v8` addresses the performance vs privacy trade-off in UUID usage by implementing steganographic UUIDs. These UUIDs maintain full compatibility with the UUID v4 format while embedding hidden timestamps that enable efficient indexing and range queries.
@@ -28,7 +31,28 @@ This extension implements steganographic UUIDs that:
 - Support functional indexing on extracted timestamps for efficient range queries
 - Provide configurable encryption to prevent timestamp discovery
 
-## Building and Installation
+## Installation
+
+### Option 1: Install from PGXN (Recommended)
+
+The extension is available on the PostgreSQL Extension Network (PGXN):
+
+```bash
+# Install PGXN client if not already installed
+# Ubuntu/Debian: sudo apt install pgxnclient
+# RHEL/CentOS: sudo dnf install pgxnclient  
+# Or: pip install pgxnclient
+
+# Install pg_uuid_v8 extension
+pgxn install pg_uuid_v8
+
+# Create extension in your database
+psql -d your_database -c "CREATE EXTENSION pg_uuid_v8;"
+```
+
+### Option 2: Build from Source
+
+For development or if PGXN is not available:
 
 ```bash
 # Install dependencies (OpenSSL required)
